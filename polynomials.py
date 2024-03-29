@@ -1,10 +1,13 @@
 class Polynomial:
     def __init__(self, *nums: int):
+        values = list(nums)
+        while values[0] == 0:
+            values.remove(0)
         if len(nums) == 0:
             self.coefficients = [0]
             self.degree = 0
         else:
-            self.coefficients = list(nums)
+            self.coefficients = values
             self.degree = len(nums) - 1
     def __str__(self) -> str:
         string = ''
@@ -67,6 +70,10 @@ class Polynomial:
                 for i in range(len(self.coefficients)):
                     sum.append(self.coefficients[i] + other.coefficients[i])
                 return Polynomial(*sum)
+        if isinstance(other, int):
+            sum = self.coefficients
+            sum[-1] += other
+            return Polynomial(*sum)
     def __sub__(self, other):
         if isinstance(other, Polynomial):
             diff = []
@@ -74,3 +81,28 @@ class Polynomial:
                 for i in range(len(self.coefficients)):
                     diff.append(self.coefficients[i] - other.coefficients[i])
                 return Polynomial(*diff)
+        if isinstance(other, int):
+            diff = self.coefficients
+            diff[-1] -= other
+            return Polynomial(*diff)
+    def __rsub__(self, other):
+        if isinstance(other, int):
+            diff = self.coefficients
+            for i in range(len(diff) - 1):
+                diff[i] *= -1
+            diff[-1] = other - diff[-1]
+            return Polynomial(*diff)
+    def __mul__(self, other):
+        if isinstance(other, int):
+            product = []
+            for coefficient in self.coefficients:
+                product.append(coefficient * other)
+            return Polynomial(*product)
+    def __rmul__(self, other):
+        if isinstance(other, int):
+            product = []
+            for coefficient in self.coefficients:
+                product.append(coefficient * other)
+            return Polynomial(*product)
+    def __neg__(self):
+        return 0 - self
