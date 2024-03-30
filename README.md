@@ -13,4 +13,5 @@ would be the polynomial
 
      x^3 - 3x^2 + 4x + 7
 
-As of right now, the only things you can do with these polynomials is represent them as strings and add and subtract polynomials of the same degree.
+As of right now, the only things you can do with these polynomials is add, subtract, and multiply them
+together and with integers, as well as represent them as strings.

@@ -3,12 +3,14 @@ class Polynomial:
         values = list(nums)
         while values[0] == 0:
             values.remove(0)
-        if len(nums) == 0:
+            if len(values) == 0:
+                break
+        if len(values) == 0:
             self.coefficients = [0]
             self.degree = 0
         else:
             self.coefficients = values
-            self.degree = len(nums) - 1
+            self.degree = len(values) - 1
     def __str__(self) -> str:
         string = ''
         if self.degree == 0:
@@ -50,7 +52,11 @@ class Polynomial:
                     elif self.coefficients[i] > 0:
                         string += f" + {self.coefficients[i]}"
                 elif self.degree == i + 1:
-                    if self.coefficients[i] < 0:
+                    if self.coefficients[i] == 1:
+                        string += " + x"
+                    elif self.coefficients[i] == -1:
+                        string += " - x"
+                    elif self.coefficients[i] < 0:
                         string += f" - {-self.coefficients[i]}x"
                     elif self.coefficients[i] > 0:
                         string += f" + {self.coefficients[i]}x"
@@ -89,9 +95,21 @@ class Polynomial:
     def __sub__(self, other):
         if isinstance(other, Polynomial):
             diff = []
-            if len(self.coefficients) == len(other.coefficients):
-                for i in range(len(self.coefficients)):
+            if self.degree == other.degree:
+                for i in range(self.degree + 1):
                     diff.append(self.coefficients[i] - other.coefficients[i])
+                return Polynomial(*diff)
+            elif self.degree > other.degree:
+                for i in range(self.degree - other.degree):
+                    diff.append(self.coefficients[i])
+                for i in range(self.degree - other.degree, self.degree + 1):
+                    diff.append(self.coefficients[i] - other.coefficients[i - self.degree + other.degree])
+                return Polynomial(*diff)
+            else:
+                for i in range(other.degree - self.degree):
+                    diff.append(-other.coefficients[i])
+                for i in range(other.degree - self.degree, other.degree + 1):
+                    diff.append(self.coefficients[i - other.degree + self.degree] - other.coefficients[i])
                 return Polynomial(*diff)
         if isinstance(other, int):
             diff = self.coefficients
@@ -110,8 +128,17 @@ class Polynomial:
             for coefficient in self.coefficients:
                 product.append(coefficient * other)
             return Polynomial(*product)
+        elif isinstance(other, Polynomial):
+            product = Polynomial(0)
+            for i in range(self.degree + 1):
+                partial = []
+                for num in other.coefficients:
+                    partial.append(self.coefficients[i] * num)
+                for j in range(self.degree - i):
+                    partial.append(0)
+                product = product + Polynomial(*partial)
+            return product
     def __rmul__(self, other):
         return self * other
     def __neg__(self):
         return 0 - self
-    
