@@ -66,9 +66,21 @@ class Polynomial:
     def __add__(self, other):
         if isinstance(other, Polynomial):
             sum = []
-            if len(self.coefficients) == len(other.coefficients):
-                for i in range(len(self.coefficients)):
+            if self.degree == other.degree:
+                for i in range(self.degree + 1):
                     sum.append(self.coefficients[i] + other.coefficients[i])
+                return Polynomial(*sum)
+            elif self.degree > other.degree:
+                for i in range(self.degree - other.degree):
+                    sum.append(self.coefficients[i])
+                for i in range(self.degree - other.degree, self.degree + 1):
+                    sum.append(self.coefficients[i] + other.coefficients[i - self.degree + other.degree])
+                return Polynomial(*sum)
+            else:
+                for i in range(other.degree - self.degree):
+                    sum.append(other.coefficients[i])
+                for i in range(other.degree - self.degree, other.degree + 1):
+                    sum.append(other.coefficients[i] + self.coefficients[i - other.degree + self.degree])
                 return Polynomial(*sum)
         if isinstance(other, int):
             sum = self.coefficients
@@ -99,10 +111,7 @@ class Polynomial:
                 product.append(coefficient * other)
             return Polynomial(*product)
     def __rmul__(self, other):
-        if isinstance(other, int):
-            product = []
-            for coefficient in self.coefficients:
-                product.append(coefficient * other)
-            return Polynomial(*product)
+        return self * other
     def __neg__(self):
         return 0 - self
+    
