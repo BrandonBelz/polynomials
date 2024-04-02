@@ -160,3 +160,14 @@ class Polynomial:
                 quotient = Polynomial(*factor_int) + quotient
                 remainder = remainder - other * Polynomial(*factor_int)
             return quotient
+    def __mod__(self, other):
+        if isinstance(other, Polynomial):
+            remainder = self
+            while other.degree <= remainder.degree:
+                factor_int = [remainder.coefficients[0] // other.coefficients[0]]
+                if factor_int == [0]:
+                    return remainder
+                for i in range(remainder.degree - other.degree):
+                    factor_int.append(0)
+                remainder = remainder - other * Polynomial(*factor_int)
+            return remainder
