@@ -1,6 +1,10 @@
 class Polynomial:
     def __init__(self, *nums: int):
         values = list(nums)
+        if len(values) == 0:
+            self.coefficients = [0]
+            self.degree = 0
+            return
         while values[0] == 0:
             values.remove(0)
             if len(values) == 0:
@@ -8,9 +12,11 @@ class Polynomial:
         if len(values) == 0:
             self.coefficients = [0]
             self.degree = 0
+            return
         else:
             self.coefficients = values
             self.degree = len(values) - 1
+            return
     def __str__(self) -> str:
         string = ''
         if self.degree == 0:
@@ -129,7 +135,7 @@ class Polynomial:
                 product.append(coefficient * other)
             return Polynomial(*product)
         elif isinstance(other, Polynomial):
-            product = Polynomial(0)
+            product = Polynomial()
             for i in range(self.degree + 1):
                 partial = []
                 for num in other.coefficients:
@@ -142,3 +148,15 @@ class Polynomial:
         return self * other
     def __neg__(self):
         return 0 - self
+    def __floordiv__(self, other):
+        if isinstance(other, Polynomial):
+            quotient, remainder = Polynomial(), self
+            while other.degree <= remainder.degree:
+                factor_int = [remainder.coefficients[0] // other.coefficients[0]]
+                if factor_int == [0]:
+                    return quotient
+                for i in range(remainder.degree - other.degree):
+                    factor_int.append(0)
+                quotient = Polynomial(*factor_int) + quotient
+                remainder = remainder - other * Polynomial(*factor_int)
+            return quotient
