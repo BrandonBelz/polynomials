@@ -171,3 +171,9 @@ class Polynomial:
                     factor_int.append(0)
                 remainder = remainder - other * Polynomial(*factor_int)
             return remainder
+    def __call__(self, x: int | float) -> int | float:
+        if isinstance(x, int) or isinstance(x, float):
+            y = 0
+            for i in range(-1, -len(self.coefficients) - 1, -1):
+                y += self.coefficients[i] * x**(-i - 1)
+            return y
