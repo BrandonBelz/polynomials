@@ -177,16 +177,21 @@ class Polynomial:
             for i in range(-1, -len(self.coefficients) - 1, -1):
                 y += self.coefficients[i] * x**(-i - 1)
             return y
-    def __iadd__(self, other) -> None:
+    def __iadd__(self, other):
         self = self + other
-    def __isub__(self, other) -> None:
+        return self
+    def __isub__(self, other):
         self = self - other
-    def __imul__(self, other) -> None:
+        return self
+    def __imul__(self, other):
         self = self * other
-    def __imod__(self, other) -> None:
+        return self
+    def __imod__(self, other):
         self = self % other
-    def __ifloordiv__(self, other) -> None:
+        return self
+    def __ifloordiv__(self, other):
         self = self // other
+        return self
     def __pow__(self, other: int):
         if other < 0:
             return Polynomial()
